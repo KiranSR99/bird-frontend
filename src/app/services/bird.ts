@@ -17,4 +17,8 @@ export class Bird {
   mobileNetPredict(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/mobilenet`, formData);
   }
+
+  scratchPredict(formData: FormData): Observable<any>{
+    return this.http.post(`${this.apiUrl}/scratch`, formData);
+  }
 }

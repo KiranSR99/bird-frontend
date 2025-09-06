@@ -115,9 +115,15 @@ export class BirdIdentify {
     formData.append('file', this.selectedFile);
 
     // Call the appropriate API based on selected model
-    const apiCall = this.selectedModel === 'mobilenet' 
-      ? this.birdService.mobileNetPredict(formData)
-      : this.birdService.libraryModelPredict(formData);
+    let apiCall;
+
+    if (this.selectedModel === 'mobilenet') {
+      apiCall = this.birdService.mobileNetPredict(formData);
+    } else if (this.selectedModel === 'scratch') {
+      apiCall = this.birdService.scratchPredict(formData);
+    } else {
+      apiCall = this.birdService.libraryModelPredict(formData);
+    }
 
     apiCall.subscribe({
       next: (response: ApiResponse) => {
@@ -130,6 +136,7 @@ export class BirdIdentify {
         this.isLoading = false;
       }
     });
+
   }
 
   // Method to get the display name of the selected model
@@ -139,10 +146,13 @@ export class BirdIdentify {
         return 'Bird Specialist Model';
       case 'mobilenet':
         return 'MobileNet Vision Model';
+      case 'scratch':
+        return 'Scratch CNN Model';
       default:
         return 'Unknown Model';
     }
   }
+
 
   private handleApiResponse(response: ApiResponse) {
     if (response.predictions && response.predictions.length > 0) {
